@@ -1,10 +1,9 @@
+import { GraphQLList, GraphQLObjectType, GraphQLSchema, GraphQLString } from "graphql";
+
 import express from "express";
-import mongoose from "mongoose";
 import { graphqlHTTP } from "express-graphql";
-import { GraphQLSchema, GraphQLObjectType, GraphQLString, GraphQLList } from "graphql";
-
+import mongoose from "mongoose";
 import userModel from "./models/user.dbmodel.js";
-
 
 const UserType = new GraphQLObjectType({
     name: "User",
@@ -45,7 +44,7 @@ const app = express();
 app.use("/gql/users", graphqlHTTP({ schema: schema, graphiql: true }));
 app.all("*", (req, res) => res.status(200).send('Este servidor opera con Graphql, único endpoint habilitado: /gql/users'));
 
-app.listen(process.env.APP_PORT, () => {
-    mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+app.listen(process.env.APP_PORT, async () => {
+    await mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true });
     console.log(`Server running on port ${process.env.APP_PORT}`);
 });
